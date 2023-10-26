@@ -5,66 +5,78 @@
 C++
 
 int main() {
-    int a[10] = { 12, 53, -5, 10, 11, -7, 20, 32, -12, 15 };
-    int b[10], c[10];
 
-    for (int i = 0; i < 10; i++) {
-        b[i] = a[i] / -3;
-        c[i] = abs(a[i] % -3);
+    int arr1[] = { 52, 14, 17, -5, 23, 10, 41, -8, 9, 15 };
+    int arr2[] = { 21, 17, 75, 41, -12, 52, 48, 11, 10, 11 };
+
+    int size = sizeof(arr1) / sizeof(arr1[0]);
+
+    // Массивы для сумм и разностей
+    vector<int> sums;
+    vector<int> differences;
+
+    for (int i = 0; i < size; ++i) {
+
+        sums.push_back(arr1[i] + arr2[i]);
+        differences.push_back(arr1[i] - arr2[i]);
     }
 
-    for (int i = 0; i < 10; i++) {
-        cout << b[i] << ' ';
+    // Вывод массива сумм
+    cout << "Массив сумм: ";
+    for (int i = 0; i < size; ++i) {
+        cout << sums[i] << " ";
     }
+    cout << std::endl;
 
-    cout << endl;
-
-    for (int i = 0; i < 10; i++) {
-        cout << c[i] << ' ';
+    // Вывод массива разностей
+    cout << "Массив разностей: ";
+    for (int i = 0; i < size; ++i) {
+        std::cout << differences[i] << " ";
     }
+    cout << std::endl;
+
+    return 0;
 }
-10М прогонов по 5 раз (среднее): 22 271 мкс
 
 Assembler
 
 int main() {
-    int a[10] = { 12, 53, -5, 10, 11, -7, 20, 32, -12, 15 };
-    int b[10], c[10];
-    
+
+    int arr1[] = { 52, 14, 17, -5, 23, 10, 41, -8, 9, 15 };
+    int arr2[] = { 21, 17, 75, 41, -12, 52, 48, 11, 10, 11 };
+
+    int size = sizeof(arr1) / sizeof(arr1[0]);
+
+    std::vector<int> sums(size);
+    std::vector<int> differences(size);
+
     __asm {
-        mov edi, 0
-        mov ecx, 10
-        mov esi, -3  // Делитель
-        m:
-            mov eax, [a + edi * 4]
-            test eax, eax
-            js negative  // Делимое отрицательное
-            xor edx, edx
-            idiv esi
-            mov[b + edi * 4], eax
-            jmp remaind
-    
-        negative:
-            neg eax
-            xor edx, edx
-            idiv esi
-            neg eax
-            mov[b + edi * 4], eax
-    
-        remaind:
-            mov[c + edi * 4], edx  // Остаток от деления
-    
-        inc edi
-        loop m
+        mov ecx, 0                  // Инициализация счетчика цикла (ecx = 0)
+        loop_start:
+        mov eax, arr1[ecx]          // Загрузить элемент из первого массива в eax
+            add eax, arr2[ecx]          // Прибавить элемент из второго массива к eax (сумма)
+            mov sums[ecx * 4], eax      // Сохранить сумму в массив сумм
+
+            mov ebx, arr1[ecx]          // Загрузить элемент из первого массива в ebx
+            sub ebx, arr2[ecx]          // Вычесть элемент из второго массива из ebx (разность)
+            mov differences[ecx * 4], ebx // Сохранить разность в массив разностей
+
+            inc ecx                     
+            cmp ecx, size               // Проверить условие окончания цикла
+            jl loop_start               
     }
-    
-    for (int i = 0; i < 10; i++) {
-        cout << b[i] << ' ';
+
+    std::cout << "Массив сумм: ";
+    for (int i = 0; i < size; ++i) {
+        std::cout << sums[i] << " ";
     }
-    
-    cout << endl;
-    
-    for (int i = 0; i < 10; i++) {
-        cout << c[i] << ' ';
+    std::cout << std::endl;
+
+    std::cout << "Массив разностей: ";
+    for (int i = 0; i < size; ++i) {
+        std::cout << differences[i] << " ";
     }
+    std::cout << std::endl;
+
+    return 0;
 }
