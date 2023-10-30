@@ -1,17 +1,18 @@
 Лабораторная работа № 6
 
 int main() {
-    int a, b, c;
-    
-    __asm {
-        mov a, 42
-        mov eax, a
-        
-        mov b, eax
-        mov ebx, b
-        
-        mov c, ebx
-    }
+     short a;
+
+ __asm {
+     mov a, 15
+     mov ax, a
+
+     mov bh, ah
+     mov bl, al
+
+     mov a, bx
+ }
+ std::cout << a;
 }
 
 1. Что такое регистры процессора? Перечислите регистры общего назначения.
