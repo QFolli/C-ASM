@@ -5,29 +5,25 @@
 C++
 
 int main() {
-    setlocale(LC_ALL, "Russian");
-    int a = 7;
-    int x = 5;
-    int y1, y2, y;
+    int a[10] = { 12, 53, -5, 10, 11, -7, 20, 32, -12, 15 };
+    int b[10], c[10];
 
-    if (x > a) {
-        y1 = x - a;
-    }
-    else {
-        y1 = 5;
+    for (int i = 0; i < 10; i++) {
+        b[i] = a[i] / -3;
+        c[i] = abs(a[i] % -3);
     }
 
-    if (a > x) {
-        y2 = a;
-    }
-    else {
-        y2 = a * x;
+    for (int i = 0; i < 10; i++) {
+        cout << b[i] << ' ';
     }
 
-    y = y1 * y2;
-    std::cout << "Ответ: " << y << std::endl;
-    return 0;
+    cout << endl;
+
+    for (int i = 0; i < 10; i++) {
+        cout << c[i] << ' ';
+    }
 }
+
 Assembler
 
 int main() {
