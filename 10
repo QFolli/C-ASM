@@ -32,19 +32,19 @@ Assembler
 
 int main() {
     int a[10] = { 12, 53, -5, 10, 11, -7, 20, 32, -12, 15 };
-    int b[10], c[10];
+    int b[10], c[10]; // Новые массивы
     
     __asm {
-        mov edi, 0
+        mov edi, 0 // регистр для обхода массива
         mov ecx, 10
         mov esi, -3  // Делитель
         m:
-            mov eax, [a + edi * 4]
-            test eax, eax
+            mov eax, [a + edi * 4] //смещение
+            test eax, eax //проверка на отрицательность
             js negative  // Делимое отрицательное
-            xor edx, edx
+            xor edx, edx // зануление
             idiv esi
-            mov[b + edi * 4], eax
+            mov[b + edi * 4], eax 
             jmp remaind
     
         negative:
@@ -57,7 +57,7 @@ int main() {
         remaind:
             mov[c + edi * 4], edx  // Остаток от деления
     
-        inc edi
+        inc edi 
         loop m
     }
     
