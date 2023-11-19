@@ -53,7 +53,7 @@ int 10h
 
 jmp $
 
-fio db 'Pavlenko Aleksandr Vladimirovich',0
+fio db 'Moiseenko Vitalii Olegovich',0
 faculty db 'FMF',0
 group db '403',0
 
