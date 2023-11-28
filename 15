@@ -1,26 +1,29 @@
 lab 15
 
-
-use16
-org 0x7c00
-CODE_SEG equ gdt_code - gdt_start
+;Найстройка сегментов
+use16 ; указывает на использование 16/битного режима
+org 0x7c00 ;указывает на начальный адресс загрузочного сектора
+CODE_SEG equ gdt_code - gdt_start ;константы определяющие смещение кодового индекса и сегментов данных начиная с GDT
 DATA_SEG equ gdt_data - gdt_start
-
+;Загрузка адресса прерывания (адрес для использования BIOS-сервисов)
 boot:
     mov ax, 0x2401
     int 0x15
     mov ax, 0x3
     int 0x10
-    cli
-    lgdt [gdt_pointer]
+;Настройка таблиы глобальных дескрипторов
+    cli ; отключает прерывание
+    lgdt [gdt_pointer] ; загружает адрес GDT в регистр GDTR
     mov eax, cr0
     or eax, 0x1
     mov cr0, eax
     jmp dword CODE_SEG:boot2
-
+; Определение GDT
 gdt_start:
+    ;опеделение null- дескриптора
     gdt_null:
         dq 0x0
+    ;Определение кодового сегмента
     gdt_code:
         dw 0xFFFF
         dw 0x0
@@ -28,6 +31,7 @@ gdt_start:
         db 10011010b
         db 11001111b
         db 0x0
+    ;Определение данных сегмента
     gdt_data:
         dw 0xFFFF
         dw 0x0
@@ -40,7 +44,7 @@ gdt_pointer:
     dw gdt_end - gdt_start
     dd gdt_start
 
-use32
+use32 ;Переход к 32-битному режиму
 boot2:
     mov ax, DATA_SEG
     mov ds, ax
@@ -48,14 +52,14 @@ boot2:
     mov fs, ax
     mov gs, ax
     mov ss, ax
-
+    ;Вывод информации на экран (вызовы процедур)
     call printName
     call printFaculty
     call printGroup
 
     cli
     hlt
-
+;Процедуры вывода строк
 printName:
     mov esi, name
     mov ebx, 0xb8000
@@ -85,10 +89,10 @@ printString:
         jmp .loop
     .done:
     ret
-
+;Строки для вывода
 name: db "Moiseenko Vitalii Olegovich", 0
 faculty: db "FMF", 0
 group: db "403", 0
-
-times 510 - ($-$$) db 0
-dw 0xaa55
+;Подпись загрузочного сектора
+times 510 - ($-$$) db 0 ;Заполнение остатка нулями
+dw 0xaa55 ;указывает BIOS на корректность загрузочного сектора 
