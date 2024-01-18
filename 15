@@ -68,7 +68,7 @@ jmp $
 print_fcs:
     mov ax, 1301h
     mov bp, message1
-    mov cx, 27
+    mov cx, 16
     mov bl, 02h
     int 10h
     ret
